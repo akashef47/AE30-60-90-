@@ -1,0 +1,953 @@
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>30-60-90 Day Territory Plan – Healthcare &amp; Higher Education</title>
+  <style>
+    :root {
+      --accent: #007db8;
+      --accent-soft: #e6f3fb;
+      --accent-dark: #005282;
+      --bg: #f5f7fa;
+      --card-bg: #ffffff;
+      --text-main: #1f2933;
+      --text-muted: #6b7280;
+      --border-soft: #d1d5db;
+      --chip-bg: #e5e7eb;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #eef6ff 0, #f9fafb 40%, #ffffff 100%);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+    }
+
+    header {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    @media (min-width: 768px) {
+      header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+    }
+
+    .headline {
+      max-width: 640px;
+    }
+
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 11px;
+      color: var(--accent-dark);
+      font-weight: 600;
+    }
+
+    h1 {
+      margin: 4px 0 8px;
+      font-size: 26px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .summary-card {
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      color: #fff;
+      padding: 14px 16px;
+      border-radius: 12px;
+      min-width: 220px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      font-size: 13px;
+    }
+
+    .summary-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(15,118,210,0.18);
+      font-size: 11px;
+      margin-bottom: 8px;
+    }
+
+    .summary-chip span {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 3px rgba(34,197,94,0.25);
+    }
+
+    .summary-title {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .summary-text {
+      opacity: 0.9;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 260px minmax(0,1fr);
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Sidebar & progress */
+    .sidebar {
+      background: rgba(255,255,255,0.9);
+      border-radius: 16px;
+      padding: 16px;
+      border: 1px solid var(--border-soft);
+      box-shadow: 0 12px 25px rgba(15,23,42,0.05);
+      position: sticky;
+      top: 16px;
+    }
+
+    .sidebar h2 {
+      font-size: 14px;
+      margin: 0 0 10px;
+    }
+
+    .timeline-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .timeline-btn {
+      border: 1px solid var(--border-soft);
+      background: #fff;
+      border-radius: 999px;
+      padding: 7px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      font-size: 12px;
+      color: var(--text-muted);
+      transition: all 0.18s ease;
+    }
+
+    .timeline-btn span.label {
+      font-weight: 500;
+      color: var(--text-main);
+    }
+
+    .timeline-btn span.sub {
+      font-size: 11px;
+    }
+
+    .timeline-btn.active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: var(--accent-dark);
+      box-shadow: 0 0 0 1px rgba(0,125,184,0.15);
+    }
+
+    .timeline-btn:hover {
+      border-color: var(--accent);
+    }
+
+    .progress-block {
+      margin-top: 10px;
+      border-top: 1px dashed var(--border-soft);
+      padding-top: 10px;
+    }
+
+    .progress-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .progress-bar {
+      height: 8px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--accent), #22c55e);
+      border-radius: 999px;
+      transition: width 0.4s ease;
+    }
+
+    .legend {
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+    .dot.green { background: var(--success); }
+    .dot.yellow { background: var(--warning); }
+    .dot.red { background: var(--danger); }
+
+    /* Main content */
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 11px;
+      margin-bottom: 4px;
+    }
+
+    .pill {
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--chip-bg);
+      color: var(--text-muted);
+    }
+
+    .pill.primary {
+      background: var(--accent-soft);
+      color: var(--accent-dark);
+      font-weight: 500;
+    }
+
+    .section {
+      background: rgba(255,255,255,0.94);
+      border-radius: 16px;
+      border: 1px solid rgba(209,213,219,0.9);
+      padding: 16px 16px 10px;
+      box-shadow: 0 12px 25px rgba(15,23,42,0.05);
+    }
+
+    .section-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .section-tag {
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent-dark);
+    }
+
+    .section-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.2fr);
+      gap: 14px;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 720px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    h3 {
+      font-size: 13px;
+      margin: 10px 0 6px;
+    }
+
+    ul {
+      padding-left: 18px;
+      margin: 4px 0 8px;
+      font-size: 13px;
+    }
+
+    li + li {
+      margin-top: 3px;
+    }
+
+    .note {
+      font-size: 12px;
+      color: var(--text-muted);
+      border-top: 1px dashed var(--border-soft);
+      padding-top: 6px;
+      margin-top: 2px;
+    }
+
+    /* Details/accordion */
+    details {
+      border-radius: 12px;
+      border: 1px solid var(--border-soft);
+      background: #f9fafb;
+      padding: 8px 10px;
+      margin-top: 8px;
+      font-size: 13px;
+    }
+
+    summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .summary-label {
+      font-weight: 500;
+    }
+
+    .summary-icon {
+      font-size: 18px;
+      padding-left: 6px;
+      color: var(--text-muted);
+    }
+
+    .details-body {
+      margin-top: 6px;
+      border-top: 1px dashed var(--border-soft);
+      padding-top: 6px;
+    }
+
+    /* Now / Next / Later cards */
+    .nnl-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 900px) {
+      .nnl-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .nnl-card {
+      border-radius: 12px;
+      border: 1px solid var(--border-soft);
+      padding: 10px 12px;
+      font-size: 13px;
+      background: #f9fafb;
+    }
+
+    .nnl-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .nnl-card ul {
+      margin-top: 2px;
+    }
+
+    .footer-note {
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--text-muted);
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="headline">
+        <div class="eyebrow">30-60-90 Day Territory Plan</div>
+        <h1>Healthcare &amp; Higher Education Territory</h1>
+        <p class="subtitle">
+          Core focus over the first 90 days: keep existing spenders both spending and growing while ramping,
+          then layer in new logos in a disciplined way. Protect and expand run-rate first, then build out
+          broader opportunities.
+        </p>
+      </div>
+      <aside class="summary-card">
+        <div class="summary-chip">
+          <span></span>
+          <strong>Ramp Horizon</strong>&nbsp;90 Days
+        </div>
+        <div class="summary-title">Territory Operating Rhythm</div>
+        <div class="summary-text">
+          <strong>0–30:</strong> Learn fast &amp; protect run-rate.<br />
+          <strong>31–60:</strong> Tell the Dell story &amp; build pipeline.<br />
+          <strong>61–90:</strong> Anchor wins &amp; lock in expansion.
+        </div>
+      </aside>
+    </header>
+
+    <div class="layout">
+      <!-- Sidebar -->
+      <aside class="sidebar" aria-label="Plan Navigation">
+        <h2>Navigate the 30-60-90</h2>
+        <div class="timeline-nav">
+          <button class="timeline-btn active" data-target="phase-0-30">
+            <span class="label">Days 0–30</span>
+            <span class="sub">Learn fast, protect run-rate</span>
+          </button>
+          <button class="timeline-btn" data-target="phase-31-60">
+            <span class="label">Days 31–60</span>
+            <span class="sub">Tell the story, build pipeline</span>
+          </button>
+          <button class="timeline-btn" data-target="phase-61-90">
+            <span class="label">Days 61–90</span>
+            <span class="sub">Anchor wins, expand</span>
+          </button>
+        </div>
+
+        <div class="progress-block">
+          <div class="progress-label">
+            <span>Ramp Progress (conceptual)</span>
+            <span id="progress-label">0–30</span>
+          </div>
+          <div class="progress-bar" aria-hidden="true">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+        </div>
+
+        <div class="legend" aria-label="Account Risk Legend">
+          <span><span class="dot red"></span> High churn risk</span>
+          <span><span class="dot yellow"></span> Neutral</span>
+          <span><span class="dot green"></span> Advocates</span>
+        </div>
+      </aside>
+
+      <!-- Main content -->
+      <main class="content">
+        <div class="pill-row">
+          <span class="pill primary">Territory: Healthcare &amp; Higher Education</span>
+          <span class="pill">Focus: Existing run-rate first</span>
+          <span class="pill">Themes: AI, Security, Services</span>
+        </div>
+
+        <!-- Phase 0-30 -->
+        <section class="section" id="phase-0-30">
+          <div class="section-header">
+            <div class="section-title">
+              Days 0–30
+              <span class="section-tag">Learn Fast, Touch Everyone, Protect Run-Rate</span>
+            </div>
+            <div class="section-sub">
+              Get plugged into the team, touch every account, and make it safe to keep spending with Dell.
+            </div>
+          </div>
+
+          <div class="grid">
+            <div>
+              <h3>Objectives</h3>
+              <ul>
+                <li>Align with leadership on what “good” looks like for this role and territory.</li>
+                <li>Touch every account at least once (preferably onsite for current spenders).</li>
+                <li>Sell <strong>meetings and conversations</strong>, not products, in early outreach.</li>
+                <li>Proactively acknowledge recent churn risk (four AEs in the last year) to rebuild trust.</li>
+              </ul>
+
+              <details>
+                <summary>
+                  <span class="summary-label">Mindset for the first 30 days</span>
+                  <span class="summary-icon">▾</span>
+                </summary>
+                <div class="details-body">
+                  <ul>
+                    <li>Expect some mess and missing information; don’t let it slow activity.</li>
+                    <li>Keep activity high even if immediate response is low.</li>
+                    <li>Treat every call or meeting like a rep in the gym to build resilience and skill.</li>
+                  </ul>
+                </div>
+              </details>
+            </div>
+
+            <div>
+              <h3>High-Velocity Outreach</h3>
+              <ul>
+                <li>Goal: touch <strong>every account</strong> in the first month.</li>
+                <li>Use all channels: current contacts, phone, email, and onsite “donut drop-offs.”</li>
+                <li>
+                  With current spenders:
+                  <ul>
+                    <li>Thank them for the existing partnership.</li>
+                    <li>Emphasize protecting their investments and showing smart next steps (not random pitches).</li>
+                    <li>Show genuine interest in their long-term goals and Dell partnership.</li>
+                  </ul>
+                </li>
+              </ul>
+
+              <details>
+                <summary>
+                  <span class="summary-label">Early themes to plant</span>
+                  <span class="summary-icon">▾</span>
+                </summary>
+                <div class="details-body">
+                  <ul>
+                    <li><strong>Dell &amp; AI</strong>: position Dell as a partner for AI-ready infrastructure and AI-Ops.</li>
+                    <li><strong>Security &amp; Services</strong>: data protection, resilience, and managed services.</li>
+                    <li>
+                      Messaging example:
+                      <em>“Most of my customers are trying to secure data and simplify operations.
+                      I’d love to hear where you are on that.”</em>
+                    </li>
+                    <li>Connect Dell strengths to healthcare and higher ed patterns and regulations.</li>
+                  </ul>
+                </div>
+              </details>
+            </div>
+          </div>
+
+          <div class="grid">
+            <div>
+              <h3>Training &amp; Internal Alignment</h3>
+              <ul>
+                <li>
+                  Schedule time with <strong>Kerrigan, Mick, Craig, Brad, Shannon, and Manny</strong> to learn:
+                  <ul>
+                    <li>How they prioritize accounts and time.</li>
+                    <li>Examples of what “good” looks like in this territory.</li>
+                    <li>Common traps in healthcare and higher ed.</li>
+                  </ul>
+                </li>
+                <li>Agree on a weekly 15–30 minute check-in and 1–2 skills each will coach me on.</li>
+              </ul>
+            </div>
+
+            <div>
+              <h3>MyService360 / AIOps Motion</h3>
+              <ul>
+                <li>Build the operational heartbeat for the territory using <strong>MyService360 / AIOps</strong> to:
+                  <ul>
+                    <li>See asset concentration by account.</li>
+                    <li>Pull contact info and locations.</li>
+                    <li>Build a rough asset overview to steer conversations.</li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="grid">
+            <div>
+              <h3>Segment Accounts &amp; Focus on Run-Rate</h3>
+              <ul>
+                <li>
+                  Break the territory into tiers:
+                  <ul>
+                    <li><strong>Tier A</strong>: current spenders (largest revenue, AMO, or active projects).</li>
+                    <li><strong>Tier B</strong>: dormant (past spend, no recent orders).</li>
+                    <li><strong>Tier C</strong>: small potential or early-stage relationships.</li>
+                  </ul>
+                </li>
+                <li>
+                  For Tier A immediately:
+                  <ul>
+                    <li>Work with <strong>Shannon</strong> in MyService360 to see what is installed.</li>
+                    <li>Identify capacity/refresh risks, support/performance issues, expiring contracts, and EOS gear.</li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3>Risk View: Red / Yellow / Green</h3>
+              <ul>
+                <li>Create a simple account risk view:
+                  <ul>
+                    <li><span class="dot red"></span> <strong>Red</strong>: high churn risk.</li>
+                    <li><span class="dot yellow"></span> <strong>Yellow</strong>: neutral / at risk if ignored.</li>
+                    <li><span class="dot green"></span> <strong>Green</strong>: advocates / referenceable.</li>
+                  </ul>
+                </li>
+                <li>Use this view to prioritize outreach and response times.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Phase 31-60 -->
+        <section class="section" id="phase-31-60" style="display:none;">
+          <div class="section-header">
+            <div class="section-title">
+              Days 31–60
+              <span class="section-tag">Keep My Word, Tell the Story, Build the Pipeline</span>
+            </div>
+            <div class="section-sub">
+              Deepen discovery, co-create success with key accounts, and stand up a clear pipeline &amp; forecast.
+            </div>
+          </div>
+
+          <div class="grid">
+            <div>
+              <h3>Objectives</h3>
+              <ul>
+                <li>Co-create with key accounts what “good” looks like and how we’ll measure it.</li>
+                <li>Start telling a consistent Dell story across AI, security, and services.</li>
+                <li>Build a clear pipeline / forecast view for the rest of the year (by ~Day 45).</li>
+                <li>Use real patterns (e.g., Vanderbilt) to paint the “art of the possible.”</li>
+              </ul>
+            </div>
+
+            <div>
+              <h3>Deeper Discovery with Tier A Accounts</h3>
+              <ul>
+                <li>
+                  For each Tier A account:
+                  <ul>
+                    <li>Book 60–90 minute working sessions with IT + at least one business or clinical stakeholder.</li>
+                    <li>In those sessions, cover:
+                      <ul>
+                        <li>Where they are now: assets, services, pain points (anchored in MyService360 data).</li>
+                        <li>What success looks like for clinicians, staff, or students.</li>
+                        <li>Constraints: budget, timing, risk tolerance.</li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+
+              <details>
+                <summary>
+                  <span class="summary-label">Get out of IT and see the work</span>
+                  <span class="summary-icon">▾</span>
+                </summary>
+                <div class="details-body">
+                  <ul>
+                    <li>Ask IT for:
+                      <ul>
+                        <li>Hospital walk-throughs and time with clinicians/front-line staff.</li>
+                        <li>In higher ed, time with faculty or department admins.</li>
+                      </ul>
+                    </li>
+                    <li>Use observations to ground proposals in real workflows and outcomes.</li>
+                  </ul>
+                </div>
+              </details>
+            </div>
+          </div>
+
+          <div class="grid">
+            <div>
+              <h3>Start Telling the Dell Story</h3>
+              <ul>
+                <li>Shift from pure discovery to a clear, outcome-based value narrative.</li>
+                <li>
+                  <strong>AI</strong>:
+                  <ul>
+                    <li>AI-ready infrastructure and AI-Ops that reduce firefighting.</li>
+                    <li>Frame AI in terms of specific use cases they care about (e.g., clinician experience, student success).</li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>Security &amp; Services</strong>:
+                  <ul>
+                    <li>Zero-trust-aligned infrastructure and data protection / cyber recovery.</li>
+                    <li>Managed services that take operational work off their plate.</li>
+                  </ul>
+                </li>
+                <li><strong>Driving human progress</strong>: connect Dell’s mission to their mission so the story centers on their impact.</li>
+              </ul>
+            </div>
+
+            <div>
+              <h3>TnB / Seeds – Keep Them Evaluating</h3>
+              <ul>
+                <li>Reinforce that it’s healthy for them to keep evaluating options.</li>
+                <li>Position Dell as a partner in that evaluation, not just a vendor.</li>
+                <li>
+                  Offer:
+                  <ul>
+                    <li>Try &amp; Buy (TnB) and hardware/software seeds to de-risk decisions.</li>
+                    <li>A small backup or cyber recovery pilot.</li>
+                    <li>A performance or health assessment.</li>
+                    <li>A limited-scope infrastructure pilot for one clinic, department, or workload.</li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <section>
+            <h3>Around Day 45: Build the Pipeline Picture</h3>
+            <ul>
+              <li>Build a simple view of pipeline for the rest of the year by:
+                <ul>
+                  <li>Account.</li>
+                  <li>Deal size.</li>
+                  <li>Tower / solution area.</li>
+                  <li>Stage and probability.</li>
+                </ul>
+              </li>
+              <li>Review pipeline with <strong>Kerrigan, Mick, and Manny</strong> and get feedback on where to focus.</li>
+              <li>Use the view with SEs and specialists to direct effort to the right places.</li>
+            </ul>
+          </section>
+        </section>
+
+        <!-- Phase 61-90 -->
+        <section class="section" id="phase-61-90" style="display:none;">
+          <div class="section-header">
+            <div class="section-title">
+              Days 61–90
+              <span class="section-tag">Anchor Wins, Bigger Vision, Expansion</span>
+            </div>
+            <div class="section-sub">
+              Convert pilots into anchor wins, build Now/Next/Later roadmaps, and cement plans to grow spend.
+            </div>
+          </div>
+
+          <div class="grid">
+            <div>
+              <h3>Objectives</h3>
+              <ul>
+                <li>Turn one or two key opportunities into real deals that serve as anchor wins.</li>
+                <li>Show each account a realistic Now / Next / Later story.</li>
+                <li>Lock in plans to keep current spenders both spending and growing.</li>
+                <li>Show visible progress and resilience in activity, pipeline, and wins.</li>
+              </ul>
+            </div>
+
+            <div>
+              <h3>Turn Pilots into Wins</h3>
+              <ul>
+                <li>
+                  For every pilot or TnB:
+                  <ul>
+                    <li>Capture results and feedback quickly.</li>
+                    <li>Turn results into a proposal and brief value summary.</li>
+                  </ul>
+                </li>
+                <li>
+                  Prioritize current spenders:
+                  <ul>
+                    <li>Strengthen the relationship and increase delivered value.</li>
+                    <li>Prove that expanding with Dell is worth it.</li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <section>
+            <h3>Paint the Picture of What’s Possible</h3>
+            <ul>
+              <li>Use:
+                <ul>
+                  <li>Shannon’s asset views (MyService360 / AIOps).</li>
+                  <li>What you saw on walk-throughs and in clinical / campus workflows.</li>
+                  <li>Early wins and mentor examples.</li>
+                </ul>
+              </li>
+              <li>
+                For key accounts, build a simple <strong>Now / Next / Later</strong> roadmap to present in QBRs:
+              </li>
+            </ul>
+
+            <div class="nnl-grid">
+              <div class="nnl-card">
+                <div class="nnl-label">Now</div>
+                <ul>
+                  <li>Stabilize, secure, and tune the installed base.</li>
+                  <li>Resolve support/performance issues and close EOS gaps.</li>
+                  <li>Lock in critical renewals and immediate risk mitigation.</li>
+                </ul>
+              </div>
+              <div class="nnl-card">
+                <div class="nnl-label">Next</div>
+                <ul>
+                  <li>Targeted modernization: backup, storage, VDI, standard clinic/hospital stack, or core campus services.</li>
+                  <li>Launch 1–2 focused pilots that align to their roadmap.</li>
+                  <li>Extend services to reduce operational burden.</li>
+                </ul>
+              </div>
+              <div class="nnl-card">
+                <div class="nnl-label">Later</div>
+                <ul>
+                  <li>More AI- and data-driven operations and use cases.</li>
+                  <li>Scaling AI-ready infrastructure and advanced analytics.</li>
+                  <li>Deeper automation of operations and resilience.</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <div class="grid">
+            <div>
+              <h3>Lock in Plans to Maintain &amp; Grow Spend (by Day 90)</h3>
+              <ul>
+                <li>
+                  For each current spender, have:
+                  <ul>
+                    <li>A clear view of installed base, services, risk points, and likely needs for 12–24 months.</li>
+                    <li>
+                      A concrete plan to keep them spending:
+                      <ul>
+                        <li>Renewals and refresh cycles.</li>
+                        <li>1–2 expansion ideas tied directly to their roadmap.</li>
+                      </ul>
+                    </li>
+                    <li>A planning conversation about avoiding surprises and the value of ongoing evaluation with Dell.</li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3>Partner Strategy</h3>
+              <ul>
+                <li>Where partners matter, align on joint plans, roles, and engagement model.</li>
+                <li>Present one clear Dell + partner story to the customer.</li>
+              </ul>
+
+              <h3>Show Resilience &amp; Progress</h3>
+              <ul>
+                <li>Continue prospecting even while working active deals.</li>
+                <li>When something slips, capture the lesson and adjust approach.</li>
+              </ul>
+            </div>
+          </div>
+
+          <section>
+            <h3>By Day 90, Be Able to Show:</h3>
+            <ul>
+              <li>
+                <strong>Activity trend</strong> – activity level over the first 90 days and how it has changed.
+              </li>
+              <li>
+                <strong>Pipeline coverage</strong> – coverage versus target, by account and tower.
+              </li>
+              <li>
+                <strong>Anchor wins</strong> – one or two anchor wins or near-term deals with clear value stories.
+              </li>
+              <li>
+                <strong>Account roadmaps</strong> – evidence that you are thinking beyond one-off transactions
+                toward multi-year value and partnership.
+              </li>
+            </ul>
+          </section>
+        </section>
+
+        <div class="footer-note">
+          Tip: Use this page live in QBRs or 1:1s by collapsing sections you don’t need and jumping between phases with the sidebar.
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const buttons = document.querySelectorAll(".timeline-btn");
+      const sections = {
+        "phase-0-30": document.getElementById("phase-0-30"),
+        "phase-31-60": document.getElementById("phase-31-60"),
+        "phase-61-90": document.getElementById("phase-61-90")
+      };
+      const progressFill = document.getElementById("progress-fill");
+      const progressLabel = document.getElementById("progress-label");
+
+      const phaseProgress = {
+        "phase-0-30": { width: "33%", label: "0–30" },
+        "phase-31-60": { width: "66%", label: "31–60" },
+        "phase-61-90": { width: "100%", label: "61–90" }
+      };
+
+      function showPhase(targetId) {
+        Object.keys(sections).forEach(id => {
+          sections[id].style.display = id === targetId ? "block" : "none";
+        });
+
+        buttons.forEach(btn => {
+          if (btn.getAttribute("data-target") === targetId) {
+            btn.classList.add("active");
+          } else {
+            btn.classList.remove("active");
+          }
+        });
+
+        const { width, label } = phaseProgress[targetId] || phaseProgress["phase-0-30"];
+        progressFill.style.width = width;
+        progressLabel.textContent = label;
+      }
+
+      buttons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const target = btn.getAttribute("data-target");
+          showPhase(target);
+        });
+      });
+
+      // Initialize
+      showPhase("phase-0-30");
+    })();
+  </script>
+</body>
+</html>
+```
